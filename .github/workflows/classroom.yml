@@ -1,0 +1,44 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Run tests
+      id: run-tests
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Run tests
+        setup-command: PYTHONPATH=src pytest
+        command: pytest
+        timeout: 10
+        max-score: 50
+    - name: Count lines in the test file
+      id: count-lines-in-the-test-file
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Count lines in the test file
+        setup-command: ''
+        command: '[ "$(wc -l < ./src/tests/test_calculator.py)" -ge 27 ] && echo true
+          || echo false'
+        input: ''
+        expected-output: 'true'
+        comparison-method: exact
+        timeout: 10
+        max-score: 50
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        RUN-TESTS_RESULTS: "${{steps.run-tests.outputs.result}}"
+        COUNT-LINES-IN-THE-TEST-FILE_RESULTS: "${{steps.count-lines-in-the-test-file.outputs.result}}"
+      with:
+        runners: run-tests,count-lines-in-the-test-file
