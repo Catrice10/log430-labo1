@@ -13,15 +13,34 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Setup Environment
+      run: |
+        docker network create labo01-network
+        
+        echo "MONGODB_HOST=localhost" >> .env
+        echo "MONGODB_NAME=labo01_db" >> .env
+        echo "DB_USERNAME=labo01" >> .env
+        echo "DB_PASSWORD=labo01" >> .env
+        
+        docker compose up -d
+        sleep 15 
+
     - name: Run tests
       id: run-tests
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: Run tests
-        setup-command: PYTHONPATH=src pytest
-        command: pytest
-        timeout: 10
+        setup-command: pip install pymongo python-dotenv bson pytest
+        command: PYTHONPATH=src pytest src/tests/test_user.py
+        timeout: 20
         max-score: 50
+      env:
+        MONGODB_HOST: localhost
+        MONGODB_NAME: labo01_db
+        DB_USERNAME: labo01
+        DB_PASSWORD: labo01
+
     - name: Count lines in the test file
       id: count-lines-in-the-test-file
       uses: classroom-resources/autograding-io-grader@v1

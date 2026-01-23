@@ -25,13 +25,11 @@ class UserDAO:
             print("Erreur : " + str(e))
 
     def select_all(self):
-        """ Select all users from MySQL """
         self.cursor.execute("SELECT id, name, email FROM users")
         rows = self.cursor.fetchall()
         return [User(*row) for row in rows]
 
     def insert(self, user):
-        """ Insert given user into MySQL """
         self.cursor.execute(
             "INSERT INTO users (name, email) VALUES (%s, %s)",
             (user.name, user.email)
@@ -40,7 +38,6 @@ class UserDAO:
         return self.cursor.lastrowid
 
     def update(self, user):
-        """ Update given user in MySQL """
         self.cursor.execute(
             "UPDATE users SET name = %s, email = %s WHERE ID = %s",
             (user.name, user.email, user.id,)
@@ -50,7 +47,6 @@ class UserDAO:
         pass
 
     def delete(self, user_id):
-        """ Delete user from MySQL with given user ID """
         self.cursor.execute(
             "DELETE FROM users WHERE id = %s",
             (user_id,)
@@ -59,7 +55,6 @@ class UserDAO:
         pass
 
     def delete_all(self): #optional
-        """ Empty users table in MySQL """
         pass
         
     def close(self):
