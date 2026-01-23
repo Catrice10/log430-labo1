@@ -12,7 +12,6 @@ class UserDAO:
     def __init__(self):
         try:
             env_path = ".env"
-            print(os.path.abspath(env_path))
             load_dotenv(dotenv_path=env_path)
             db_host = os.getenv("MYSQL_HOST")
             db_name = os.getenv("MYSQL_DB_NAME")
@@ -42,10 +41,21 @@ class UserDAO:
 
     def update(self, user):
         """ Update given user in MySQL """
+        self.cursor.execute(
+            "UPDATE users SET name = %s, email = %s WHERE ID = %s",
+            (user.name, user.email, user.id,)
+        )
+        self.conn.commit()
+        return self.cursor.lastrowid
         pass
 
     def delete(self, user_id):
         """ Delete user from MySQL with given user ID """
+        self.cursor.execute(
+            "DELETE FROM users WHERE id = %s",
+            (user_id,)
+        )
+        self.conn.commit()
         pass
 
     def delete_all(self): #optional

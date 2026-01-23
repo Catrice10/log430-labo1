@@ -12,7 +12,8 @@ class UserView:
         """ Show menu with operation options which can be selected by the user """
         controller = UserController()
         while True:
-            print("\n1. Montrer la liste d'utilisateurs\n2. Ajouter un utilisateur\n3. Quitter l'appli")
+            # Menu mis à jour avec Update (3) et Delete (4)
+            print("\n1. Montrer la liste d'utilisateurs\n2. Ajouter un utilisateur\n3. Mettre à jour un utilisateur\n4. Supprimer un utilisateur\n5. Retourner au menu\n")
             choice = input("Choisissez une option: ")
 
             if choice == '1':
@@ -23,6 +24,19 @@ class UserView:
                 user = User(None, name, email)
                 controller.create_user(user)
             elif choice == '3':
+                # Option 3 : Mise à jour
+                users = controller.list_users()
+                UserView.show_users(users)
+                user_id = input("Entrez l'ID complet de l'utilisateur à modifier : ")
+                name, email = UserView.get_inputs()
+                user = User(user_id, name, email)
+                controller.update_user(user)
+            elif choice == '4':
+                # Option 4 : Suppression
+                user_id = input("Entrez l'ID complet de l'utilisateur à supprimer : ")
+                controller.delete_user(user_id)
+            elif choice == '5':
+                # Option 5 : Quitter
                 controller.shutdown()
                 break
             else:
@@ -31,7 +45,12 @@ class UserView:
     @staticmethod
     def show_users(users):
         """ List users """
-        print("\n".join(f"{user.id}: {user.name} ({user.email})" for user in users))
+        # On affiche l'ID complet pour permettre le copier-coller dans MongoDB
+        print("\n--- Liste des utilisateurs ---")
+        if not users:
+            print("Aucun utilisateur trouvé.")
+        else:
+            print("\n".join(f"{user.id}: {user.name} ({user.email})" for user in users))
 
     @staticmethod
     def get_inputs():
