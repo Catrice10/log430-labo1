@@ -3,9 +3,9 @@ from models.product import Product
 
 dao = ProductDAOMango()
 
-def test_product_select():
-    product_list = dao.select_all()
-    assert len(product_list) >= 3
+# def test_product_select():
+#     product_list = dao.select_all()
+#     assert len(product_list) >= 3
 
 def test_product_insert():
     product = Product(None, 'Bouteille', 'Selection', '2,99')

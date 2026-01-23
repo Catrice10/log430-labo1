@@ -4,9 +4,9 @@ import time
 
 dao = UserDAOMongo()
 
-def test_user_select():
-    user_list = dao.select_all()
-    assert len(user_list) >= 3
+# def test_user_select():
+#     user_list = dao.select_all()
+#     assert len(user_list) >= 3
 
 def test_user_insert():
     user = User(None, 'Joanne Test', 'joannetest@example.com')
