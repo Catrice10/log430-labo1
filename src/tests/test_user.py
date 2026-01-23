@@ -28,7 +28,6 @@ def test_user_update():
     emails = [u.email for u in user_list]
     assert corrected_email in emails
 
-    # cleanup
     dao.delete(assigned_id)
 
 def test_user_delete():
