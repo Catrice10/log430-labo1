@@ -9,7 +9,7 @@ dao = UserDAOMongo()
 #     assert len(user_list) >= 3
 
 def test_user_insert():
-    user = User(None, 'Joanne Test', 'joannetest@example.com')
+    user = User(None, 'Joanne Test', 'joannetest@example.com') #test
     dao.insert(user)
     user_list = dao.select_all()
     emails = [u.email for u in user_list]
