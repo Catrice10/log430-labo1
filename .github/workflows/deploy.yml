@@ -1,0 +1,36 @@
+name: Deploy Store Manager
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Create .env file
+      run: |
+        cat > .env << 'ENVEOF'
+        MYSQL_HOST=mysql
+        MONGODB_HOST=mongo
+        MYSQL_DB_NAME=labo01_db
+        MONGODB_NAME=labo01_db
+        DB_USERNAME=labo01
+        DB_PASSWORD=labo01
+        ENVEOF
+    
+    - name: Create Docker network
+      run: docker network create labo01-network || true
+    
+    - name: Stop existing containers
+      run: docker-compose down || true
+    
+    - name: Build and start services
+      run: docker-compose up -d --build
+    
+    - name: Show running containers
+      run: docker ps
